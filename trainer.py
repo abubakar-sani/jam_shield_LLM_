@@ -21,7 +21,7 @@ def train(jammer_type, channel_switching_cost):
     s_size = ob_space.shape[0]
     a_size = ac_space.n
     max_env_steps = 100
-    TRAIN_Episodes = 50
+    TRAIN_Episodes = 25
     env._max_episode_steps = max_env_steps
 
     epsilon = 1.0
@@ -85,16 +85,17 @@ def train(jammer_type, channel_switching_cost):
     st.pyplot(fig)
 
     # Save the figure
-    plot_name = f'./data/train_rewards_{jammer_type}_csc_{channel_switching_cost}.png'
-    plt.savefig(plot_name, bbox_inches='tight')
+    # plot_name = f'./data/train_rewards_{jammer_type}_csc_{channel_switching_cost}.png'
+    # plt.savefig(plot_name, bbox_inches='tight')
     plt.close(fig)  # Close the figure to release resources
 
     # Save Results
     # Rewards
-    fileName = f'./data/train_rewards_{jammer_type}_csc_{channel_switching_cost}.json'
-    with open(fileName, 'w') as f:
-        json.dump(rewards, f)
-
-    # Save the agent as a SavedAgent.
-    agentName = f'./data/DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
-    DDQN_agent.save_model(agentName)
+    # fileName = f'./data/train_rewards_{jammer_type}_csc_{channel_switching_cost}.json'
+    # with open(fileName, 'w') as f:
+    #     json.dump(rewards, f)
+    #
+    # # Save the agent as a SavedAgent.
+    # agentName = f'./data/DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
+    # DDQN_agent.save_model(agentName)
+    return DDQN_agent

@@ -5,6 +5,8 @@ import streamlit as st
 import os
 from trainer import train
 from tester import test
+import transformers
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 def main():
@@ -24,32 +26,25 @@ def main():
     st.sidebar.write(f"Jammer Type: {jammer_type}")
     st.sidebar.write(f"Channel Switching Cost: {channel_switching_cost}")
 
-    train_button = st.sidebar.button('Train')
-    test_button = st.sidebar.button('Test')
+    start_button = st.sidebar.button('Start')
 
-    if train_button or test_button:
-        agent_name = f'DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
-        if os.path.exists(agent_name):
-            if train_button:
-                st.warning("Agent has been trained already! Do you want to retrain?")
-                retrain = st.sidebar.button('Yes')
-                if retrain:
-                    perform_training(jammer_type, channel_switching_cost)
-            elif test_button:
-                perform_testing(jammer_type, channel_switching_cost)
-        else:
-            if train_button:
-                perform_training(jammer_type, channel_switching_cost)
-            elif test_button:
-                st.warning("Agent has not been trained yet. Click Train First!!!")
-
+    if start_button:
+        agent = perform_training(jammer_type, channel_switching_cost)
+        test(agent, jammer_type, channel_switching_cost)
 
 def perform_training(jammer_type, channel_switching_cost):
-    train(jammer_type, channel_switching_cost)
+    agent = train(jammer_type, channel_switching_cost)
+    model_name = "tiiuae/falcon-7b-instruct"
+    model = AutoModelForCausalLM.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    pipeline = transformers.pipeline("text-generation", model=model, tokenizer=tokenizer, max_length=100, temperature=0.7)
+    text = pipeline("Discuss this topic: Integrating LLMs to DRL-based anti-jamming.")
+    st.write(text)
+    return agent
 
 
-def perform_testing(jammer_type, channel_switching_cost):
-    test(jammer_type, channel_switching_cost)
+def perform_testing(agent, jammer_type, channel_switching_cost):
+    test(agent, jammer_type, channel_switching_cost)
 
 
 if __name__ == "__main__":
