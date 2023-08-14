@@ -3,4 +3,5 @@ tensorflow
 matplotlib
 gym
 streamlit
+transformers
 
