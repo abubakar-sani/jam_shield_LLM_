@@ -2,15 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import gym
-import tensorflow as tf
-import tf_slim as slim
-import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import json
-from tensorflow import keras
-from ns3gym import ns3env
-import gym
 from gym import spaces
 import numpy as np
 

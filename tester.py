@@ -1,16 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
-from os import mkdir
-import gym
-import tensorflow as tf
-import tf_slim as slim
 import numpy as np
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import json
-from tensorflow import keras
 from DDQN import DoubleDeepQNetwork
 from antiJamEnv import AntiJamEnv
 
