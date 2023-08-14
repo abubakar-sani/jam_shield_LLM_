@@ -63,7 +63,7 @@ class DoubleDeepQNetwork:
     def experience_replay(self, batch_size):
         # Execute the experience replay
         minibatch = random.sample(self.memory, batch_size)  # Randomly sample from memory
-
+        print(minibatch)
         # Convert to numpy for speed by vectorization
         x = []
         y = []
