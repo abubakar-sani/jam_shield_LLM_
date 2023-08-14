@@ -5,17 +5,10 @@ import streamlit as st
 import os
 from trainer import train
 from tester import test
-import transformers
-from transformers import TFAutoModelForCausalLM, AutoTokenizer
+from transformers_setup import pipeline  # Import the pipeline from the setup module
 
 
 def main():
-    model_name = "tiiuae/falcon-7b-instruct"
-    model = TFAutoModelForCausalLM.from_pretrained(model_name)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    pipeline = transformers.pipeline("text-generation", model=model, tokenizer=tokenizer, max_length=100,
-                                     temperature=0.7)
-
     st.title("Beyond the Anti-Jam: Integration of DRL with LLM")
 
     st.sidebar.header("Make Your Environment Configuration")
