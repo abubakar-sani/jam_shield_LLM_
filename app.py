@@ -18,5 +18,11 @@ def main():
     st.write(f"Agent Type: {agent_type}")
     st.write(f"Channel Switching Cost: {channel_switching_cost}")
 
+    st.write("==================================================")
+    st.write("Training Starting")
+    st.write("Training completed")
+    st.write("==================================================")
+    st.write("")
+
 if __name__ == "__main__":
     main()
