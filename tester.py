@@ -13,13 +13,11 @@ def test(jammer_type, channel_switching_cost):
     env = AntiJamEnv(jammer_type, channel_switching_cost)
     ob_space = env.observation_space
     ac_space = env.action_space
-    st.write(f"Observation space: , {ob_space}")
-    st.write(f"Action space: {ac_space}")
 
     s_size = ob_space.shape[0]
     a_size = ac_space.n
     max_env_steps = 100
-    TEST_Episodes = 100
+    TEST_Episodes = 10
     env._max_episode_steps = max_env_steps
 
     epsilon = 1.0  # exploration rate
