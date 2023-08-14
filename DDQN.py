@@ -9,10 +9,9 @@ import random
 
 
 class DoubleDeepQNetwork:
-    def __init__(self, states, actions, history, alpha, gamma, epsilon, epsilon_min, epsilon_decay):
-        self.nS = states
-        self.nA = actions
-        self.history = history
+    def __init__(self, s_size, a_size, alpha, gamma, epsilon, epsilon_min, epsilon_decay):
+        self.nS = s_size
+        self.nA = a_size
         self.memory = deque([], maxlen=2500)
         self.alpha = alpha
         self.gamma = gamma
@@ -27,7 +26,7 @@ class DoubleDeepQNetwork:
 
     def build_model(self):
         model = keras.Sequential()  # linear stack of layers https://keras.io/models/sequential/
-        model.add(keras.layers.Dense(24, input_dim=self.history * self.nS, activation='relu'))  # [Input] -> Layer 1
+        model.add(keras.layers.Dense(24, input_dim=self.nS, activation='relu'))  # [Input] -> Layer 1
         model.add(keras.layers.Dense(24, activation='relu'))  # Layer 2 -> 3
         model.add(keras.layers.Dense(self.nA, activation='linear'))  # Layer 3 -> [output]
 
@@ -69,8 +68,8 @@ class DoubleDeepQNetwork:
         x = []
         y = []
         np_array = np.array(minibatch)
-        st = np.zeros((0, self.history*self.nS))  # States
-        nst = np.zeros((0, self.history*self.nS))  # Next States
+        st = np.zeros((0, self.nS))  # States
+        nst = np.zeros((0, self.nS))  # Next States
         for i in range(len(np_array)):  # Creating the state and next state np arrays
             st = np.append(st, np_array[i, 0], axis=0)
             nst = np.append(nst, np_array[i, 3], axis=0)
@@ -93,7 +92,7 @@ class DoubleDeepQNetwork:
             y.append(target_f)
             index += 1
         # Reshape for Keras Fit
-        x_reshape = np.array(x).reshape(batch_size, self.history * self.nS)
+        x_reshape = np.array(x).reshape(batch_size, self.nS)
         y_reshape = np.array(y)
         epoch_count = 1
         hist = self.model.fit(x_reshape, y_reshape, epochs=epoch_count, verbose=0)

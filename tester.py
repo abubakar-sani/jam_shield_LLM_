@@ -27,7 +27,6 @@ def test(jammer_type, channel_switching_cost):
     epsilon_decay = 0.999
     discount_rate = 0.95
     lr = 0.001
-    batch_size = 32
 
     agentName = f'savedAgents/DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
     DDQN_agent = DoubleDeepQNetwork(s_size, a_size, lr, discount_rate, epsilon, epsilon_min, epsilon_decay)
