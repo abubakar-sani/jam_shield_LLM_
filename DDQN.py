@@ -6,6 +6,7 @@ from collections import deque
 from tensorflow import keras
 from tensorflow.keras.models import load_model
 import random
+import streamlit
 
 
 class DoubleDeepQNetwork:
@@ -63,7 +64,7 @@ class DoubleDeepQNetwork:
     def experience_replay(self, batch_size):
         # Execute the experience replay
         minibatch = random.sample(self.memory, batch_size)  # Randomly sample from memory
-        print(minibatch)
+        streamlit.write(f"{minibatch}")
         # Convert to numpy for speed by vectorization
         x = []
         y = []
