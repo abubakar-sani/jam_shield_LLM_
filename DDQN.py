@@ -1,6 +1,7 @@
 import numpy as np
 from collections import deque
 from tensorflow import keras
+from tensorflow.keras.models import load_model
 import random
 
 
@@ -24,14 +25,9 @@ class DoubleDeepQNetwork:
     def build_model(self):
         model = keras.Sequential()  # linear stack of layers https://keras.io/models/sequential/
         model.add(keras.layers.Dense(24, input_dim=self.history * self.nS, activation='relu'))  # [Input] -> Layer 1
-        #   Dense: Densely connected layer https://keras.io/layers/core/
-        #   24: Number of neurons
-        #   input_dim: Number of input variables
-        #   activation: Rectified Linear Unit (relu) ranges >= 0
         model.add(keras.layers.Dense(24, activation='relu'))  # Layer 2 -> 3
         model.add(keras.layers.Dense(self.nA, activation='linear'))  # Layer 3 -> [output]
-        #   Size has to match the output (different actions)
-        #   Linear activation on the last layer
+
         model.compile(loss='mean_squared_error',  # Loss function: Mean Squared Error
                       optimizer=keras.optimizers.Adam(
                           lr=self.alpha))  # Optimizer: Adam (Feel free to check other options)
@@ -58,6 +54,9 @@ class DoubleDeepQNetwork:
     def save_model(self, agentName):
         # Save the agent model weights in a file
         self.model.save(agentName)
+
+    def load_saved_model(self, agent_name):
+        return load_model(agent_name)
 
     def experience_replay(self, batch_size):
         # Execute the experience replay
