@@ -26,7 +26,7 @@ def test(jammer_type, channel_switching_cost):
     discount_rate = 0.95
     lr = 0.001
 
-    agentName = f'DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
+    agentName = f'./data/DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
     DDQN_agent = DoubleDeepQNetwork(s_size, a_size, lr, discount_rate, epsilon, epsilon_min, epsilon_decay)
     DDQN_agent.model = DDQN_agent.load_saved_model(agentName)
     rewards = []  # Store rewards for graphing
@@ -70,12 +70,12 @@ def test(jammer_type, channel_switching_cost):
     st.pyplot(fig)
 
     # Save the figure
-    plot_name = f'test_rewards_{jammer_type}_csc_{channel_switching_cost}.png'
+    plot_name = f'./data/test_rewards_{jammer_type}_csc_{channel_switching_cost}.png'
     plt.savefig(plot_name, bbox_inches='tight')
     plt.close(fig)  # Close the figure to release resources
 
     # Save Results
     # Rewards
-    fileName = f'test_rewards_{jammer_type}_csc_{channel_switching_cost}.json'
+    fileName = f'./data/test_rewards_{jammer_type}_csc_{channel_switching_cost}.json'
     with open(fileName, 'w') as f:
         json.dump(rewards, f)

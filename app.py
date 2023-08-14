@@ -45,19 +45,17 @@ def main():
 
 
 def perform_training(jammer_type, channel_switching_cost):
-    st.sidebar.write("==================================================")
+    st.sidebar.write("======================")
     st.sidebar.write('Training Starting')
     train(jammer_type, channel_switching_cost)
-    st.sidebar.write("Training completed")
-    st.sidebar.write("==================================================")
 
 
 def perform_testing(jammer_type, channel_switching_cost):
-    st.sidebar.write("==================================================")
+    st.sidebar.write("======================")
     st.sidebar.write('Testing Starting')
     test(jammer_type, channel_switching_cost)
     st.sidebar.write("Testing completed")
-    st.sidebar.write("==================================================")
+    st.sidebar.write("======================")
 
 
 if __name__ == "__main__":

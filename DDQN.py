@@ -27,8 +27,8 @@ class DoubleDeepQNetwork:
 
     def build_model(self):
         model = keras.Sequential()  # linear stack of layers https://keras.io/models/sequential/
-        model.add(keras.layers.Dense(24, input_dim=self.nS, activation='relu'))  # [Input] -> Layer 1
-        model.add(keras.layers.Dense(24, activation='relu'))  # Layer 2 -> 3
+        model.add(keras.layers.Dense(256, input_dim=self.nS, activation='relu'))  # [Input] -> Layer 1
+        model.add(keras.layers.Dense(256, activation='relu'))  # Layer 2 -> 3
         model.add(keras.layers.Dense(self.nA, activation='linear'))  # Layer 3 -> [output]
 
         model.compile(loss='mean_squared_error',  # Loss function: Mean Squared Error
