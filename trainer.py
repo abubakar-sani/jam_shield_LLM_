@@ -11,13 +11,12 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import json
 from tensorflow import keras
-from ns3gym import ns3env
-from DDQN_FNN import DoubleDeepQNetwork
+from DDQN import DoubleDeepQNetwork
 
 jammerTypes = ['dynamic_pattern', 'combined', 'sweeping', 'random']
 jammerType = jammerTypes[0]
 network = 'FNN'
-cscs = [0, 0.1, 0.2, 0.3, 0.4]  # Channel switching cost
+cscs = [0, 0.05, 0.1, 0.15, 0.2]  # Channel switching cost
 
 for csc in cscs:
     env = gym.make('ns3-v0')
