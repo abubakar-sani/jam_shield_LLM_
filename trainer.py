@@ -10,7 +10,7 @@ from antiJamEnv import AntiJamEnv
 
 
 def train(jammer_type, channel_switching_cost):
-    st.subheader("Training Progress")
+    st.subheader("DRL Training Progress")
     progress_bar = st.progress(0)
     status_text = st.empty()
 
@@ -62,7 +62,7 @@ def train(jammer_type, channel_switching_cost):
         if len(rewards) > 10 and np.average(rewards[-10:]) >= max_env_steps - 0.10 * max_env_steps:
             break
 
-    st.sidebar.success("Training completed!")
+    st.sidebar.success("DRL Training completed!")
 
     # Plotting
     rolling_average = np.convolve(rewards, np.ones(10) / 10, mode='valid')

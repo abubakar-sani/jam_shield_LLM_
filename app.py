@@ -6,7 +6,7 @@ import os
 from trainer import train
 from tester import test
 import transformers
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import TFAutoModelForCausalLM, TFAutoTokenizer
 
 
 def main():
@@ -34,9 +34,10 @@ def main():
 
 def perform_training(jammer_type, channel_switching_cost):
     agent = train(jammer_type, channel_switching_cost)
+    st.subheader("Generating Insights of the DRL-Training")
     model_name = "tiiuae/falcon-7b-instruct"
-    model = AutoModelForCausalLM.from_pretrained(model_name)
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = TFAutoModelForCausalLM.from_pretrained(model_name)
+    tokenizer = TFAutoTokenizer.from_pretrained(model_name)
     pipeline = transformers.pipeline("text-generation", model=model, tokenizer=tokenizer, max_length=100, temperature=0.7)
     text = pipeline("Discuss this topic: Integrating LLMs to DRL-based anti-jamming.")
     st.write(text)
