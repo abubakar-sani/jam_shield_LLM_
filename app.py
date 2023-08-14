@@ -8,6 +8,12 @@ from tester import test
 import transformers
 from transformers import TFAutoModelForCausalLM, AutoTokenizer
 
+# Move the transformers related setup outside the Streamlit app's main function
+model_name = "tiiuae/falcon-7b-instruct"
+model = TFAutoModelForCausalLM.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+pipeline = transformers.pipeline("text-generation", model=model, tokenizer=tokenizer, max_length=100, temperature=0.7)
+
 
 def main():
     st.title("Beyond the Anti-Jam: Integration of DRL with LLM")
@@ -31,11 +37,6 @@ def main():
     if start_button:
         agent = perform_training(jammer_type, channel_switching_cost)
         st.subheader("Generating Insights of the DRL-Training")
-        model_name = "tiiuae/falcon-7b-instruct"
-        model = TFAutoModelForCausalLM.from_pretrained(model_name)
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        pipeline = transformers.pipeline("text-generation", model=model, tokenizer=tokenizer, max_length=100,
-                                         temperature=0.7)
         text = pipeline("Discuss this topic: Integrating LLMs to DRL-based anti-jamming.")
         st.write(text)
         test(agent, jammer_type, channel_switching_cost)
