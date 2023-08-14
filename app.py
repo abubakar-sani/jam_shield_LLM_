@@ -6,7 +6,7 @@ import os
 from trainer import train
 from tester import test
 import transformers
-from transformers import TFAutoModelForCausalLM, TFAutoTokenizer
+from transformers import TFAutoModelForCausalLM, AutoTokenizer
 
 
 def main():
