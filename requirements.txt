@@ -1,8 +1,6 @@
-numpy>=1.21.0
+numpy
 tensorflow
-matplotlib==3.0.0
-gym==0.10.9
-pandas==1.4.0
-nn_builder
+matplotlib
+gym
 streamlit
 
