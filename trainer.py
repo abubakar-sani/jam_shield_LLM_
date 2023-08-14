@@ -81,8 +81,8 @@ def train(jammer_type, channel_switching_cost):
 
     # Display the Streamlit figure using streamlit.pyplot
     st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.sidebar.subheader("Training Graph")
-    st.sidebar.pyplot(fig)
+    st.subheader("Training Graph")
+    st.pyplot(fig)
 
     # Save the figure
     plot_name = f'./data/train_rewards_{jammer_type}_csc_{channel_switching_cost}.png'
