@@ -68,12 +68,13 @@ class DoubleDeepQNetwork:
         # Convert to numpy for speed by vectorization
         x = []
         y = []
-        np_array = np.array(minibatch)
+        np_array = list(minibatch)
         st = np.zeros((0, self.nS))  # States
         nst = np.zeros((0, self.nS))  # Next States
-        for i in range(len(np_array)):  # Creating the state and next state np arrays
-            st = np.append(st, np_array[i, 0], axis=0)
-            nst = np.append(nst, np_array[i, 3], axis=0)
+        for i in range(len(np_array)):
+            st = np.append(st, np_array[i][0], axis=0)
+            nst = np.append(nst, np_array[i][3], axis=0)
+
         st_predict = self.model.predict(st)  # Here is the speedup! I can predict on the ENTIRE batch
         nst_predict = self.model.predict(nst)
         nst_predict_target = self.model_target.predict(nst)  # Predict from the TARGET
