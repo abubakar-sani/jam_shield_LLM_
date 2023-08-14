@@ -10,9 +10,9 @@ from antiJamEnv import AntiJamEnv
 
 
 def train(jammer_type, channel_switching_cost):
-    st.sidebar.subheader("Training Progress")
-    progress_bar = st.sidebar.progress(0)
-    status_text = st.sidebar.empty()
+    st.subheader("Training Progress")
+    progress_bar = st.progress(0)
+    status_text = st.empty()
 
     env = AntiJamEnv(jammer_type, channel_switching_cost)
     ob_space = env.observation_space
