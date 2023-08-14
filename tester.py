@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import json
+import streamlit as st
 from DDQN import DoubleDeepQNetwork
 from antiJamEnv import AntiJamEnv
 
@@ -12,12 +13,11 @@ def test(jammer_type, channel_switching_cost):
     env = AntiJamEnv(jammer_type, channel_switching_cost)
     ob_space = env.observation_space
     ac_space = env.action_space
-    print("Observation space: ", ob_space, ob_space.dtype)
-    print("Action space: ", ac_space, ac_space.n)
+    st.write(f"Observation space: , {ob_space}")
+    st.write(f"Action space: {ac_space}")
 
     s_size = ob_space.shape[0]
     a_size = ac_space.n
-    total_episodes = 200
     max_env_steps = 100
     TEST_Episodes = 100
     env._max_episode_steps = max_env_steps
@@ -28,7 +28,7 @@ def test(jammer_type, channel_switching_cost):
     discount_rate = 0.95
     lr = 0.001
 
-    agentName = f'savedAgents/DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
+    agentName = f'DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
     DDQN_agent = DoubleDeepQNetwork(s_size, a_size, lr, discount_rate, epsilon, epsilon_min, epsilon_decay)
     DDQN_agent.model = DDQN_agent.load_saved_model(agentName)
     rewards = []  # Store rewards for graphing
@@ -45,8 +45,7 @@ def test(jammer_type, channel_switching_cost):
             if done or t_test == max_env_steps - 1:
                 rewards.append(tot_rewards)
                 epsilons.append(0)  # We are doing full exploit
-                print("episode: {}/{}, score: {}, e: {}"
-                      .format(e_test, TEST_Episodes, tot_rewards, 0))
+                st.write(f"episode: {e_test}/{TEST_Episodes}, score: {tot_rewards}, e: {DDQN_agent.epsilon}")
                 break
             next_state = np.reshape(next_state, [1, s_size])
             tot_rewards += reward
@@ -54,21 +53,31 @@ def test(jammer_type, channel_switching_cost):
             state = next_state
 
     # Plotting
-    plotName = f'results/test/rewards_{jammer_type}_csc_{channel_switching_cost}.png'
-    rolling_average = np.convolve(rewards, np.ones(10) / 10)
-    plt.plot(rewards)
-    plt.plot(rolling_average, color='black')
-    plt.axhline(y=max_env_steps - 0.10 * max_env_steps, color='r', linestyle='-')  # Solved Line
-    # Scale Epsilon (0.001 - 1.0) to match reward (0 - 200) range
-    eps_graph = [200 * x for x in epsilons]
-    plt.plot(eps_graph, color='g', linestyle='-')
+    rolling_average = np.convolve(rewards, np.ones(10) / 10, mode='valid')
+
+    # Create a new Streamlit figure
+    fig = plt.figure()
+    plt.plot(rewards, label='Rewards')
+    plt.plot(rolling_average, color='black', label='Rolling Average')
+    plt.axhline(y=max_env_steps - 0.10 * max_env_steps, color='r', linestyle='-', label='Solved Line')
+    eps_graph = [100 * x for x in epsilons]
+    plt.plot(eps_graph, color='g', linestyle='-', label='Epsilons')
     plt.xlabel('Episodes')
     plt.ylabel('Rewards')
-    plt.savefig(plotName, bbox_inches='tight')
-    plt.show()
+    plt.title(f'Testing Rewards - {jammer_type}, CSC: {channel_switching_cost}')
+    plt.legend()
+
+    # Display the Streamlit figure using streamlit.pyplot
+    st.set_option('deprecation.showPyplotGlobalUse', False)
+    st.pyplot(fig)
+
+    # Save the figure
+    plot_name = f'test_rewards_{jammer_type}_csc_{channel_switching_cost}.png'
+    plt.savefig(plot_name, bbox_inches='tight')
+    plt.close(fig)  # Close the figure to release resources
 
     # Save Results
     # Rewards
-    fileName = f'results/test/rewards_{jammer_type}_csc_{channel_switching_cost}.json'
+    fileName = f'test_rewards_{jammer_type}_csc_{channel_switching_cost}.json'
     with open(fileName, 'w') as f:
         json.dump(rewards, f)

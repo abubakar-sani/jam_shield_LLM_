@@ -25,17 +25,20 @@ def main():
     st.write(f"Channel Switching Cost: {channel_switching_cost}")
 
     if st.button('Train'):
-        st.write("==================================================")
-        st.write('Training Starting')
-        trainer.train(jammer_type, channel_switching_cost)
-        st.write("Training completed")
-        st.write("==================================================")
-
-    if st.button('Test'):
-        st.write("==================================================")
-        st.write('Testing Starting')
-        agentName = f'savedAgents/DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
+        agentName = f'DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
         if os.path.exists(agentName):
+            st.write("Agent has been trained already!!!")
+        else:
+            st.write("==================================================")
+            st.write('Training Starting')
+            trainer.train(jammer_type, channel_switching_cost)
+            st.write("Training completed")
+            st.write("==================================================")
+    if st.button('Test'):
+        agentName = f'DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
+        if os.path.exists(agentName):
+            st.write("==================================================")
+            st.write('Testing Starting')
             tester.test(jammer_type, channel_switching_cost)
             st.write("Testing completed")
             st.write("==================================================")
