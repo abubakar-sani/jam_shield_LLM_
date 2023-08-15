@@ -24,6 +24,15 @@ llm_chain = LLMChain(prompt=prompt, verbose=True, llm=llm)
 
 
 def train(jammer_type, channel_switching_cost):
+    st.markdown("""
+    In this demonstration, we address the challenge of mitigating jamming attacks using Deep Reinforcement Learning (DRL). 
+    The process comprises three main steps:
+
+    1. **DRL Training**: An agent is trained using DRL to tackle jamming attacks.
+    2. **Training Performance Visualization**: Post-training, the performance metrics (rewards, exploration rate, etc.) are visualized to assess the agent's proficiency.
+    3. **Insights Generation with Falcon 7B LLM**: Leveraging the Falcon 7B LLM, we generate insights from the training graphs, elucidating the agent's behavior and achievements.
+
+    """, unsafe_allow_html=True)
     st.subheader("DRL Training Progress")
     progress_bar = st.progress(0)
     status_text = st.empty()
@@ -35,7 +44,7 @@ def train(jammer_type, channel_switching_cost):
     s_size = ob_space.shape[0]
     a_size = ac_space.n
     max_env_steps = 100
-    TRAIN_Episodes = 5
+    TRAIN_Episodes = 50
     env._max_episode_steps = max_env_steps
 
     epsilon = 1.0
