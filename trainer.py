@@ -135,7 +135,7 @@ def generate_insights_langchain(rewards, rolling_average, epsilons, solved_thres
     )
 
     result = llm_chain.predict(data=data_description)
-    return result["generated_text"]
+    return result
 
 
 
