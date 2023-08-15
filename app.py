@@ -27,7 +27,7 @@ def main():
 
     if start_button:
         agent = perform_training(jammer_type, channel_switching_cost)
-        test(agent, jammer_type, channel_switching_cost)
+        # test(agent, jammer_type, channel_switching_cost)
 
 
 def perform_training(jammer_type, channel_switching_cost):

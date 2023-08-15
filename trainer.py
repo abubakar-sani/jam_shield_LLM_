@@ -3,7 +3,6 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import json
 import streamlit as st
 from DDQN import DoubleDeepQNetwork
 from antiJamEnv import AntiJamEnv
@@ -108,34 +107,23 @@ def train(jammer_type, channel_switching_cost):
             st.subheader("Graph Explanation")
             st.write(insights)
 
-    # Save the figure
-    # plot_name = f'./data/train_rewards_{jammer_type}_csc_{channel_switching_cost}.png'
-    # plt.savefig(plot_name, bbox_inches='tight')
     plt.close(fig)  # Close the figure to release resources
 
-    # Save Results
-    # Rewards
-    # fileName = f'./data/train_rewards_{jammer_type}_csc_{channel_switching_cost}.json'
-    # with open(fileName, 'w') as f:
-    #     json.dump(rewards, f)
-    #
-    # # Save the agent as a SavedAgent.
-    # agentName = f'./data/DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
-    # DDQN_agent.save_model(agentName)
     return DDQN_agent
 
 
 def generate_insights_langchain(rewards, rolling_average, epsilons, solved_threshold):
     data_description = (
         f"The graph represents training rewards over episodes. "
-        f"The actual rewards range from {min(rewards)} to {max(rewards)} with an average of {np.mean(rewards):.2f}. "
-        f"The rolling average values range from {min(rolling_average)} to {max(rolling_average)} with an average of {np.mean(rolling_average):.2f}. "
-        f"The epsilon values range from {min(epsilons)} to {max(epsilons)} with an average exploration rate of {np.mean(epsilons):.2f}. "
-        f"The solved threshold is set at {solved_threshold}."
+        f"The actual rewards range from {min(rewards):.2f} to {max(rewards):.2f} with an average of {np.mean(rewards):.2f}. "
+        f"The rolling average values range from {min(rolling_average):.2f} to {max(rolling_average):.2f} with an average of {np.mean(rolling_average):.2f}. "
+        f"The epsilon values range from {min(epsilons):.2f} to {max(epsilons):.2f} with an average exploration rate of {np.mean(epsilons):.2f}. "
+        f"The solved threshold is set at {solved_threshold:.2f}."
     )
 
     result = llm_chain.predict(data=data_description)
     return result
+
 
 
 
