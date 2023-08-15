@@ -79,10 +79,23 @@ def train(jammer_type, channel_switching_cost):
     ax.set_title(f'Training Rewards - {jammer_type}, CSC: {channel_switching_cost}')
     ax.legend()
 
-    # Display the Streamlit figure using streamlit.pyplot
-    st.set_option('deprecation.showPyplotGlobalUse', False)
-    st.subheader("Training Graph")
-    st.pyplot(fig)
+    # Use Streamlit layout to create two side-by-side containers
+    with st.beta_container():
+        col1, col2 = st.beta_columns(2)
+
+        with col1:
+            st.subheader("Training Graph")
+            st.set_option('deprecation.showPyplotGlobalUse', False)
+            st.pyplot(fig)
+
+        with col2:
+            st.subheader("Graph Explanation")
+            st.write("""
+               The training graph shows the rewards received by the agent in each episode of the training process.
+               The blue line represents the actual reward values, while the black line represents a rolling average.
+               The red horizontal line indicates the threshold for considering the task solved.
+               The green line represents the epsilon (exploration rate) values for the agent, indicating how often it takes random actions.
+               """)
 
     # Save the figure
     # plot_name = f'./data/train_rewards_{jammer_type}_csc_{channel_switching_cost}.png'
@@ -98,4 +111,4 @@ def train(jammer_type, channel_switching_cost):
     # # Save the agent as a SavedAgent.
     # agentName = f'./data/DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
     # DDQN_agent.save_model(agentName)
-    return DDQN_agent
+    return DDQN_agent, rewards
