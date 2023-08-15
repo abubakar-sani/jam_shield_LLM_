@@ -49,7 +49,7 @@ def perform_testing(agent, jammer_type, channel_switching_cost):
 # pipeline = transformers.pipeline("text-generation", model=model, tokenizer=tokenizer, max_length=100,
 #                                  temperature=0.7)
 
-# st.title("Beyond the Anti-Jam: Integration of DRL with LLM")
+st.title("Beyond the Anti-Jam: Integration of DRL with LLM")
 
 st.sidebar.header("Make Your Environment Configuration")
 mode = st.sidebar.radio("Choose Mode", ["Auto", "Manual"])
