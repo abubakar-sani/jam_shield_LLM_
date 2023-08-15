@@ -7,6 +7,11 @@ import json
 import streamlit as st
 from DDQN import DoubleDeepQNetwork
 from antiJamEnv import AntiJamEnv
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+
+model_name = "tiiuae/falcon-7b-instruct"  # Replace with the exact model name or path
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 
 def train(jammer_type, channel_switching_cost):
@@ -53,7 +58,8 @@ def train(jammer_type, channel_switching_cost):
             if done or time == max_env_steps - 1:
                 rewards.append(tot_rewards)
                 epsilons.append(DDQN_agent.epsilon)
-                status_text.text(f"Episode: {e+1}/{TRAIN_Episodes}, Reward: {tot_rewards}, Epsilon: {DDQN_agent.epsilon:.3f}")
+                status_text.text(
+                    f"Episode: {e + 1}/{TRAIN_Episodes}, Reward: {tot_rewards}, Epsilon: {DDQN_agent.epsilon:.3f}")
                 progress_bar.progress((e + 1) / TRAIN_Episodes)
                 break
 
@@ -66,12 +72,12 @@ def train(jammer_type, channel_switching_cost):
 
     # Plotting
     rolling_average = np.convolve(rewards, np.ones(10) / 10, mode='valid')
-
+    solved_threshold = max_env_steps - 0.10 * max_env_steps
     # Create a new Streamlit figure for the training graph
     fig, ax = plt.subplots(figsize=(8, 6))
     ax.plot(rewards, label='Rewards')
     ax.plot(rolling_average, color='black', label='Rolling Average')
-    ax.axhline(y=max_env_steps - 0.10 * max_env_steps, color='r', linestyle='-', label='Solved Line')
+    ax.axhline(y=solved_threshold, color='r', linestyle='-', label='Solved Line')
     eps_graph = [100 * x for x in epsilons]
     ax.plot(eps_graph, color='g', linestyle='-', label='Epsilons')
     ax.set_xlabel('Episodes')
@@ -79,23 +85,18 @@ def train(jammer_type, channel_switching_cost):
     ax.set_title(f'Training Rewards - {jammer_type}, CSC: {channel_switching_cost}')
     ax.legend()
 
-    # Use Streamlit layout to create two side-by-side containers
+    insights = generate_insights(rewards, rolling_average, epsilons, solved_threshold)
+
     with st.container():
         col1, col2 = st.columns(2)
 
         with col1:
             st.subheader("Training Graph")
-            st.set_option('deprecation.showPyplotGlobalUse', False)
             st.pyplot(fig)
 
         with col2:
             st.subheader("Graph Explanation")
-            st.write("""
-               The training graph shows the rewards received by the agent in each episode of the training process.
-               The blue line represents the actual reward values, while the black line represents a rolling average.
-               The red horizontal line indicates the threshold for considering the task solved.
-               The green line represents the epsilon (exploration rate) values for the agent, indicating how often it takes random actions.
-               """)
+            st.write(insights)
 
     # Save the figure
     # plot_name = f'./data/train_rewards_{jammer_type}_csc_{channel_switching_cost}.png'
@@ -111,4 +112,22 @@ def train(jammer_type, channel_switching_cost):
     # # Save the agent as a SavedAgent.
     # agentName = f'./data/DDQNAgent_{jammer_type}_csc_{channel_switching_cost}'
     # DDQN_agent.save_model(agentName)
-    return DDQN_agent, rewards
+    return DDQN_agent
+
+
+def generate_insights(rewards, rolling_average, epsilons, solved_threshold):
+    description = (
+        f"The graph represents training rewards over episodes. "
+        f"The actual rewards range from {min(rewards)} to {max(rewards)} with an average of {np.mean(rewards):.2f}. "
+        f"The rolling average values range from {min(rolling_average)} to {max(rolling_average)} with an average of {np.mean(rolling_average):.2f}. "
+        f"The epsilon values range from {min(epsilons)} to {max(epsilons)} with an average exploration rate of {np.mean(epsilons):.2f}. "
+        f"The solved threshold is set at {solved_threshold}. "
+        f"Provide insights based on this data."
+    )
+    input_ids = tokenizer.encode(description, return_tensors="pt")
+
+    # Generate output from model
+    output_ids = model.generate(input_ids, max_length=300, num_return_sequences=1)
+    output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
+
+    return output_text
