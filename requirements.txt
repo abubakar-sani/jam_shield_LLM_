@@ -3,7 +3,7 @@ tensorflow
 matplotlib
 gym
 streamlit
-transformers==4.6.0
+transformers
 torch
 einops
 accelerate
