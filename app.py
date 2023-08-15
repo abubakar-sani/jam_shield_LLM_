@@ -1,6 +1,7 @@
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import transformers
 import torch
+import streamlit as st
 
 model = "tiiuae/falcon-7b-instruct"
 
@@ -21,5 +22,6 @@ sequences = pipeline(
     num_return_sequences=1,
     eos_token_id=tokenizer.eos_token_id,
 )
+st.title("Beyond the Anti-Jam: Integration of DRL with LLM")
 for seq in sequences:
-    print(f"Result: {seq['generated_text']}")
+    st.write(f"Result: {seq['generated_text']}")
