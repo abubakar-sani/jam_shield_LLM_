@@ -80,8 +80,8 @@ def train(jammer_type, channel_switching_cost):
     ax.legend()
 
     # Use Streamlit layout to create two side-by-side containers
-    with st.beta_container():
-        col1, col2 = st.beta_columns(2)
+    with st.container():
+        col1, col2 = st.columns(2)
 
         with col1:
             st.subheader("Training Graph")
