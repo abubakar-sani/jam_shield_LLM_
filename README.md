@@ -46,7 +46,7 @@ For specific library versions, please refer to the `requirements.txt` file.
 3. Execute the script:
 
    ```bash
-   python3 app.py
+   python3 appy.py
    ```
 
 ### Usage
