@@ -6,4 +6,5 @@ streamlit
 transformers
 torch
 einops
+accelerate
 
