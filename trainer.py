@@ -20,7 +20,7 @@ llm = HuggingFaceHub(huggingfacehub_api_token=huggingfacehub_api_token,
 template = """You are an AI trained to analyze and provide insights about training graphs in the domain of deep 
 reinforcement learning. Given the following data about a graph: {data}, provide detailed insights. """
 
-prompt = PromptTemplate(template=template, input_variables=["question"])
+prompt = PromptTemplate(template=template, input_variables=["data"])
 llm_chain = LLMChain(prompt=prompt, verbose=True, llm=llm)
 
 
