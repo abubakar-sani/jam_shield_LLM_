@@ -7,11 +7,21 @@ import json
 import streamlit as st
 from DDQN import DoubleDeepQNetwork
 from antiJamEnv import AntiJamEnv
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
+from langchain import HuggingFaceHub, PromptTemplate, LLMChain
 
-model_name = "tiiuae/falcon-7b-instruct"  # Replace with the exact model name or path
-model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
-tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+repo_id = "tiiuae/falcon-7b-instruct"
+huggingfacehub_api_token = "YOUR_API_TOKEN_HERE"  # Replace with your actual API token
+
+llm = HuggingFaceHub(huggingfacehub_api_token=huggingfacehub_api_token,
+                     repo_id=repo_id,
+                     model_kwargs={"temperature":0.2, "max_new_tokens":2000})
+
+template = """You are an AI trained to analyze and provide insights about training graphs in the domain of deep 
+reinforcement learning. Given the following data about a graph: {data}, provide detailed insights. """
+
+prompt = PromptTemplate(template=template, input_variables=["question"])
+llm_chain = LLMChain(prompt=prompt, verbose=True, llm=llm)
 
 
 def train(jammer_type, channel_switching_cost):
@@ -85,7 +95,7 @@ def train(jammer_type, channel_switching_cost):
     ax.set_title(f'Training Rewards - {jammer_type}, CSC: {channel_switching_cost}')
     ax.legend()
 
-    insights = generate_insights(rewards, rolling_average, epsilons, solved_threshold)
+    insights = generate_insights_langchain(rewards, rolling_average, epsilons, solved_threshold)
 
     with st.container():
         col1, col2 = st.columns(2)
@@ -115,19 +125,17 @@ def train(jammer_type, channel_switching_cost):
     return DDQN_agent
 
 
-def generate_insights(rewards, rolling_average, epsilons, solved_threshold):
-    description = (
+def generate_insights_langchain(rewards, rolling_average, epsilons, solved_threshold):
+    data_description = (
         f"The graph represents training rewards over episodes. "
         f"The actual rewards range from {min(rewards)} to {max(rewards)} with an average of {np.mean(rewards):.2f}. "
         f"The rolling average values range from {min(rolling_average)} to {max(rolling_average)} with an average of {np.mean(rolling_average):.2f}. "
         f"The epsilon values range from {min(epsilons)} to {max(epsilons)} with an average exploration rate of {np.mean(epsilons):.2f}. "
-        f"The solved threshold is set at {solved_threshold}. "
-        f"Provide insights based on this data."
+        f"The solved threshold is set at {solved_threshold}."
     )
-    input_ids = tokenizer.encode(description, return_tensors="pt")
 
-    # Generate output from model
-    output_ids = model.generate(input_ids, max_length=300, num_return_sequences=1)
-    output_text = tokenizer.decode(output_ids[0], skip_special_tokens=True)
+    result = llm_chain.predict(data=data_description)
+    return result["generated_text"]
 
-    return output_text
+
+
