@@ -5,4 +5,5 @@ gym
 streamlit
 transformers
 torch
+einops
 
